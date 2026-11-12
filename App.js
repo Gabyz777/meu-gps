@@ -1,20 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as Location from 'expo-location';
+import { useEffect, useState } from 'react';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+const [permissaoConcedida, setPermissaoConcedida] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+useEffect(() => {
+  const pedirPermissao = async () => {
+    // A API paralisa o código e mostra a janelinha do Android!
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    
+    if (status === 'granted') {
+      setPermissaoConcedida(true);
+      console.log("Uhul! O usuário deixou rastrear!");
+    } else {
+      console.log("Fomos bloqueados. Game over.");
+    }
+  };
+
+  pedirPermissao();
+}, []);
